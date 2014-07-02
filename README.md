@@ -1,6 +1,7 @@
 DEPENDENCIES
 ---------------------------------------------------------------------
 classMarker.py - class definition for autosomal and X chromosome markers
+
 gsl.py - gsl wrapper
 
 USAGE
