@@ -6,7 +6,7 @@ gsl.py - gsl wrapper
 
 USAGE
 ---------------------------------------------------------------------
-python extFBAT.py -fm=<feature matrix path> -phenotype=<phenotypeFile.txt> -gender=<genderFile.txt> [other optional arguments]
+python scanFBAT.py -fm=<feature matrix path> -phenotype=<phenotypeFile.txt> -gender=<genderFile.txt> [other optional arguments]
 
 
 INPUT 
@@ -38,7 +38,7 @@ Options: tdt or fbat or omit to run both tests
 
 
 6. Optional: test version (command line option -version)
-Options: ext or std (extended or standard) or omit to run both
+Options: scan or std or omit to run both
 
 
 7. Optional: genetic model list(command line option -models)
