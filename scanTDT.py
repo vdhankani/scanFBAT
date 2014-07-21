@@ -4,13 +4,13 @@ import gzip
 import numpy as np
 from classMarker import AutosomalMarker,ChrXMarker
 
-#USAGE:  python miTDT.py 
+#USAGE:  python scanTDT.py 
 #-fm=<featurematrix.txt> <required>
 #-phenotype=<phenotype.txt> <required>
 #-pedigrees=<pedID.txt> OR DEFAULT to all trios in the fm 
 #-offset=<a number between 0 and 1> DEFAULT is 0.5 to give equal and opposite weightage to cases and controls (used only for FBAT)
 #-test=tdt OR fbat OR omit to run both
-#-version=ext OR std OR omit to run both (NOTE: standard score is computed and reported even with extended version)
+#-version=scan OR std OR omit to run both (NOTE: standard score is computed and reported even with scanFBAT)
 #-models=a(dditive) OR d(ominant) OR r(ecessive) OR DEFAULT to additive 
 #-out=<output file path> or DEFAULT to tdt.out.gz
 #-gender=<NB gender file path> <required> (column 1 is pedID of the NB, column 2 is '1' for male, '2' for female)
@@ -227,15 +227,15 @@ outputColumns = ['MarkerID','MAF','n[0/0,0/1,1/1,./.]','nCompleteInformativeCase
 if TEST == "" or TEST == "tdt": #both or TDT
 	if not MODELS or "a" in MODELS:
 		outputColumns.extend(['ChiSq_TDT_Additive','P-value_TDT_Additive'])
-		if VERSION == "ext" or VERSION == "":
+		if VERSION == "scan" or VERSION == "":
 			outputColumns.extend(['min_ChiSq_rTDT_Additive','min_P-value_rTDT_Additive','max_ChiSq_rTDT_Additive','max_P-value_rTDT_Additive'])
 	if "d" in MODELS:    
 		outputColumns.extend(['ChiSq_TDT_Dominant','P-value_TDT_Dominant'])
-		if VERSION == "ext" or VERSION == "":
+		if VERSION == "scan" or VERSION == "":
                         outputColumns.extend(['min_ChiSq_rTDT_Dominant','min_P-value_rTDT_Dominant','max_ChiSq_rTDT_Dominant','max_P-value_rTDT_Dominant'])	
 	if "r" in MODELS:
 		outputColumns.extend(['ChiSq_TDT_Recessive','P-value_TDT_Recessive'])
-		if VERSION == "ext" or VERSION == "":	
+		if VERSION == "scan" or VERSION == "":	
 			outputColumns.extend(['min_ChiSq_rTDT_Recessive','min_P-value_rTDT_Recessive','max_ChiSq_rTDT_Recessive','max_P-value_rTDT_Recessive'])	
 	if MODELS and "a" not in MODELS and "d" not in MODELS and "r" not in MODELS: 
 		print "Unrecognised model: "+MODELS
@@ -245,16 +245,16 @@ if TEST == "" or TEST == "tdt": #both or TDT
 if TEST == "" or TEST == "fbat": #both or FBAT
 	if not MODELS or "a" in MODELS:
                 outputColumns.extend(['Z_FBAT_Additive','P-value_FBAT_Additive'])
-		if VERSION == "ext" or VERSION == "":
-                        outputColumns.extend(['min_Z_extFBAT_Additive','min_P-value_extFBAT_Additive','max_Z_extFBAT_Additive','max_P-value_extFBAT_Additive'])
+		if VERSION == "scan" or VERSION == "":
+                        outputColumns.extend(['min_Z_scanFBAT_Additive','min_P-value_scanFBAT_Additive','max_Z_scanFBAT_Additive','max_P-value_scanFBAT_Additive'])
         if "d" in MODELS:
                 outputColumns.extend(['Z_FBAT_Dominant','P-value_FBAT_Dominant'])
-		if VERSION == "ext" or VERSION == "":
-                        outputColumns.extend(['min_Z_extFBAT_Dominant','min_P-value_extFBAT_Dominant','max_Z_extFBAT_Dominant','max_P-value_extFBAT_Dominant'])
+		if VERSION == "scan" or VERSION == "":
+                        outputColumns.extend(['min_Z_scanFBAT_Dominant','min_P-value_scanFBAT_Dominant','max_Z_scanFBAT_Dominant','max_P-value_scanFBAT_Dominant'])
         if "r" in MODELS:
                 outputColumns.extend(['Z_FBAT_Recessive','P-value_FBAT_Recessive'])
-		if VERSION == "ext" or VERSION == "":
-                        outputColumns.extend(['min_Z_extFBAT_Recessive','min_P-value_extFBAT_Recessive','max_Z_extFBAT_Recessive','max_P-value_extFBAT_Recessive'])
+		if VERSION == "scan" or VERSION == "":
+                        outputColumns.extend(['min_Z_scanFBAT_Recessive','min_P-value_scanFBAT_Recessive','max_Z_scanFBAT_Recessive','max_P-value_scanFBAT_Recessive'])
         if not MODELS and "a" not in MODELS and "d" not in MODELS and "r" not in MODELS:
                 print "Unrecognised model: "+MODELS
                 sys.exit(1)	
@@ -362,7 +362,7 @@ for line in fmFile:
 			thisMarker.stdTDT("a")
 			outputColumns.extend([str(thisMarker.chiSq_StdTDT),str(thisMarker.pValue_StdTDT)])
 			#ADDITIVE mi-TDT--------------------------------------
-			if VERSION == "ext" or VERSION == "":
+			if VERSION == "scan" or VERSION == "":
 				thisMarker.extendedTDT("a")
 				outputColumns.extend([str(thisMarker.minChiSq_rTDT),str(thisMarker.minPValue_rTDT),str(thisMarker.maxChiSq_rTDT),str(thisMarker.maxPValue_rTDT)])
 
@@ -371,7 +371,7 @@ for line in fmFile:
 			thisMarker.stdTDT("d")
 			outputColumns.extend([str(thisMarker.chiSq_StdTDT),str(thisMarker.pValue_StdTDT)])
 			#DOMINANT mi-TDT----------------------------------------------------------------------------
-			if VERSION == "ext" or VERSION == "":
+			if VERSION == "scan" or VERSION == "":
 				thisMarker.extendedTDT("d")
 				outputColumns.extend([str(thisMarker.minChiSq_rTDT),str(thisMarker.minPValue_rTDT),str(thisMarker.maxChiSq_rTDT),str(thisMarker.maxPValue_rTDT)])
 		
@@ -380,7 +380,7 @@ for line in fmFile:
                         thisMarker.stdTDT("r")
 			outputColumns.extend([str(thisMarker.chiSq_StdTDT),str(thisMarker.pValue_StdTDT)])
                         #RECESSIVE mi-TDT----------------------------------------------------------------------------
-			if VERSION == "ext" or VERSION == "":	
+			if VERSION == "scan" or VERSION == "":	
                                 thisMarker.extendedTDT("r")
                                 outputColumns.extend([str(thisMarker.minChiSq_rTDT),str(thisMarker.minPValue_rTDT),str(thisMarker.maxChiSq_rTDT),str(thisMarker.maxPValue_rTDT)])
 	
@@ -390,7 +390,7 @@ for line in fmFile:
 			thisMarker.stdFBAT("a",OFFSET)
                         outputColumns.extend([str(thisMarker.Z_stdFBAT),str(thisMarker.pValue_stdFBAT)])
                         #ADDITIVE ext-FBAT------------------------------
-			if VERSION == "ext" or VERSION == "":
+			if VERSION == "scan" or VERSION == "":
 				thisMarker.extendedFBAT("a",OFFSET)
 				outputColumns.extend([str(thisMarker.minZ_extFBAT),str(thisMarker.minPValue_extFBAT),str(thisMarker.maxZ_extFBAT),str(thisMarker.maxPValue_extFBAT)])
 		
@@ -399,7 +399,7 @@ for line in fmFile:
                         thisMarker.stdFBAT("d",OFFSET)
                         outputColumns.extend([str(thisMarker.Z_stdFBAT),str(thisMarker.pValue_stdFBAT)])
                         #DOMINANT ext-FBAT------------------------------
-			if VERSION == "ext" or VERSION == "":
+			if VERSION == "scan" or VERSION == "":
                                 thisMarker.extendedFBAT("d",OFFSET)
                                 outputColumns.extend([str(thisMarker.minZ_extFBAT),str(thisMarker.minPValue_extFBAT),str(thisMarker.maxZ_extFBAT),str(thisMarker.maxPValue_extFBAT)])	
 
@@ -408,7 +408,7 @@ for line in fmFile:
                         thisMarker.stdFBAT("r",OFFSET)
                         outputColumns.extend([str(thisMarker.Z_stdFBAT),str(thisMarker.pValue_stdFBAT)])
                         #RECESSIVE ext-FBAT-----------------------------
-			if VERSION == "ext" or VERSION == "":
+			if VERSION == "scan" or VERSION == "":
                                 thisMarker.extendedFBAT("r",OFFSET)
                                 outputColumns.extend([str(thisMarker.minZ_extFBAT),str(thisMarker.minPValue_extFBAT),str(thisMarker.maxZ_extFBAT),str(thisMarker.maxPValue_extFBAT)])
 
